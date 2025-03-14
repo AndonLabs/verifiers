@@ -3,6 +3,7 @@ from typing import Callable, Optional, Union, Any, List
 from accelerate.utils import broadcast_object_list, gather, gather_object
 from datasets import Dataset, IterableDataset
 import torch
+import json
 from torch import nn
 from transformers import (
     PreTrainedModel,
@@ -214,6 +215,7 @@ class GRPOEnvTrainer(GRPOTrainer):
                         "reward": rewards.tolist(),
                     }
                     df = pd.DataFrame(table)
+                    df["completion"] = df["completion"].apply(json.dumps)
                     wandb.log({"completions": wandb.Table(dataframe=df)}) # type: ignore
 
         return {
